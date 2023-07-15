@@ -184,7 +184,7 @@ export default function Home() {
             variant="gradient"
             gradient={{ from: 'blue', to: 'yellow' }}
           >
-            ChatGPT + Whisper API Bot Demo
+            StoryBuddy
           </Text>
         </Center>
 
