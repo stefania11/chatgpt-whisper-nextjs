@@ -20,6 +20,13 @@ import {
   IconUser,
 } from '@tabler/icons';
 
+import { NextApiRequest, NextApiResponse } from 'next';
+import torch from 'torch';
+import imageio from 'imageio';
+import { TextToVideoZeroPipeline } from 'diffusers';
+
+
+
 interface MessageSchema {
   role: 'assistant' | 'user' | 'system';
   content: string;
@@ -139,10 +146,27 @@ export default function Home() {
     }
   };
 
+// // video generation
+//   const generateVideo = async (req: NextApiRequest, res: NextApiResponse, text: string) => {
+//     setError(null);
+//     try {
+//       const model_id = "runwayml/stable-diffusion-v1-5";
+//       const pipe = TextToVideoZeroPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda");
+
+//       const prompt = "A panda is playing guitar on times square";
+//       const result = pipe(prompt=prompt).images;
+//       const video = result.map(r => (r * 255).astype("uint8"));
+
+//       res.setHeader('Content-Type', 'video/mp4');
+//       res.send(video);
+//     };
+//   };
+
+
   return (
     <>
       <Head>
-        <title>ChatGPT/Whisper API Bot</title>
+        <title>StoryBuddy</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -157,7 +181,7 @@ export default function Home() {
             variant="gradient"
             gradient={{ from: 'blue', to: 'teal' }}
           >
-            ChatGPT + Whisper API Bot Demo
+            Story Buddy
           </Text>
         </Center>
 
