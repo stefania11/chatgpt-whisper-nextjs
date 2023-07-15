@@ -32,6 +32,9 @@ interface MessageSchema {
   content: string;
 }
 
+const storyteller =
+  'You are gathering information for a story for kids in middle school. The kids will give you details, and you need to ask them only one question every time to continue the story. Please keep your response in a format where the summary and question are separated.';
+
 // roles
 const botRolePairProgrammer =
   'You are an expert pair programmer helping build an AI bot application with the OpenAI ChatGPT and Whisper APIs. The software is a web application built with NextJS with serverless functions, React functional components using TypeScript.';
@@ -51,7 +54,7 @@ const longBrevity = 'Your responses are always 3 to 4 sentences.';
 const whimsicalBrevity = 'Your responses are always 5 to 6 sentences.';
 
 // dials
-const role = botRolePairProgrammer;
+const role = storyteller;
 const personality = quirky;
 const brevity = briefBrevity;
 
@@ -179,9 +182,9 @@ export default function Home() {
             weight={300}
             pl={5}
             variant="gradient"
-            gradient={{ from: 'blue', to: 'teal' }}
+            gradient={{ from: 'blue', to: 'yellow' }}
           >
-            Story Buddy
+            ChatGPT + Whisper API Bot Demo
           </Text>
         </Center>
 
