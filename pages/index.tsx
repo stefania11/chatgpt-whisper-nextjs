@@ -28,10 +28,21 @@ import torch from 'torch';
 import imageio from 'imageio';
 import { TextToVideoZeroPipeline } from 'diffusers';
 
+// for video generation WIP
+// import { NextApiRequest, NextApiResponse } from 'next';
+// import torch from 'torch';
+// import imageio from 'imageio';
+// import { TextToVideoZeroPipeline } from 'diffusers';
+
+
+
 interface MessageSchema {
   role: 'assistant' | 'user' | 'system';
   content: string;
 }
+
+const storyteller =
+  'You are gathering information for a story for kids in middle school. The kids will give you details, and you need to ask them only one question every time to continue the story. Please keep your response in a format where the summary and question are separated.';
 
 // roles
 const botRolePairProgrammer =
@@ -52,7 +63,7 @@ const longBrevity = 'Your responses are always 3 to 4 sentences.';
 const whimsicalBrevity = 'Your responses are always 5 to 6 sentences.';
 
 // dials
-const role = botRolePairProgrammer;
+const role = storyteller;
 const personality = quirky;
 const brevity = briefBrevity;
 
@@ -60,6 +71,8 @@ const brevity = briefBrevity;
 const botContext = `${role} ${personality} ${brevity}`;
 
 export default function Home() {
+  const [inputValue, setInputValue] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const defaultContextSchema: MessageSchema = {
     role: 'assistant',
     content: botContext,
@@ -188,10 +201,79 @@ export default function Home() {
   //     };
   //   };
 
+
+  //diffusion model
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      setLoading(true);
+
+      const response = await fetch('/api/stablediffusion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ value: inputValue }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setImageUrl(data[0]);
+      } else {
+        console.error('Error:', response.statusText);
+      }
+      setLoading(false);
+    };
+
+  // const diffusionRequest = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     console.log('messagesArray in diffusionRequest fn', messagesArray);
+  //     const response = await fetch('/api/stablediffusion', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         value: messagesArray
+  //       }),
+  //     });
+  //       const diffusionResponse = await response.json();
+  //       if (diffusionResponse.ok) {
+  //         setImageUrl(diffusionResponse[0]);
+  //         // setMessagesArray((prevState) => [...prevState, diffusionResponse]);
+  //       } else {
+  //         setError('No response returned from server.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
+
+
+
+// // video generation
+//   const generateVideo = async (req: NextApiRequest, res: NextApiResponse, text: string) => {
+//     setError(null);
+//     try {
+//       const model_id = "runwayml/stable-diffusion-v1-5";
+//       const pipe = TextToVideoZeroPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda");
+
+//       const prompt = "A panda is playing guitar on times square";
+//       const result = pipe(prompt=prompt).images;
+//       const video = result.map(r => (r * 255).astype("uint8"));
+
+//       res.setHeader('Content-Type', 'video/mp4');
+//       res.send(video);
+//     };
+//   };
+
+
   return (
     <>
       <Head>
-        <title>ChatGPT/Whisper API Bot</title>
+        <title>StoryBuddy</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -204,9 +286,9 @@ export default function Home() {
             weight={300}
             pl={5}
             variant="gradient"
-            gradient={{ from: 'blue', to: 'teal' }}
+            gradient={{ from: 'blue', to: 'yellow' }}
           >
-            ChatGPT + Whisper API Bot Demo
+            StoryBuddy
           </Text>
         </Center>
 
@@ -336,6 +418,50 @@ export default function Home() {
           </div>
         </Center>
       </Container>
+        <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+          <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-green-500 to-cyan-400 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+              <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  className="w-full px-5 py-3 text-gray-700 bg-gray-200 rounded"
+                  placeholder="Enter a prompt..."
+                />
+                <button type="submit" className="w-full px-3 py-4 text-white bg-gradient-to-r from-cyan-400 via-green-500 to-cyan-400 rounded-md focus:outline-none" disabled={loading}>
+                  Submit
+                </button>
+              </form>
+            </div>
+          </div>
+          {loading && (
+            <div className="mt-12 flex justify-center">
+              <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+            </div>
+          )}
+          {imageUrl && !loading && (
+            <div className="mt-12 flex justify-center">
+              <img src={imageUrl} alt="Generated image" className="rounded-xl shadow-lg" />
+            </div>
+          )}
+          <style jsx>{`
+            .loader {
+              animation: spin 1s linear infinite;
+              border-top-color: #3498db;
+            }
+
+            @keyframes spin {
+              0% {
+                transform: rotate(0deg);
+              }
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+          `}</style>
+        </div>
     </>
   );
 }
