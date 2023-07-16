@@ -23,10 +23,10 @@ import {
 } from '@tabler/icons';
 import { Fish, Unicorn } from '../public/images/imagePaths';
 
-import { NextApiRequest, NextApiResponse } from 'next';
-import torch from 'torch';
-import imageio from 'imageio';
-import { TextToVideoZeroPipeline } from 'diffusers';
+// import { NextApiRequest, NextApiResponse } from 'next';
+// import torch from 'torch';
+// import imageio from 'imageio';
+// import { TextToVideoZeroPipeline } from 'diffusers';
 
 // for video generation WIP
 // import { NextApiRequest, NextApiResponse } from 'next';
@@ -71,7 +71,7 @@ const brevity = briefBrevity;
 const botContext = `${role} ${personality} ${brevity}`;
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState('');
+  // const [inputValue, setInputValue] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const defaultContextSchema: MessageSchema = {
     role: 'assistant',
@@ -204,7 +204,7 @@ export default function Home() {
 
   //diffusion model
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: any) => {
       event.preventDefault();
       setLoading(true);
 

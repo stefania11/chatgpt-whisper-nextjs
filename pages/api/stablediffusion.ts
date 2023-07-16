@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import Replicate from 'replicate';
 
-const handler = async (req, res) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method not allowed' });
     return;
@@ -10,7 +11,7 @@ const handler = async (req, res) => {
 
   try {
     const replicate = new Replicate({
-      auth: process.env.REPLICATE_API_TOKEN,
+      auth: process.env.REPLICATE_API_TOKEN!,
     });
 
     const output = await replicate.run(
@@ -21,7 +22,7 @@ const handler = async (req, res) => {
           image_dimensions: "512x512",
           num_inference_steps: 12,
           num_outputs: 1,
-          guideance_scale: 3.5,
+          guidance_scale: 3.5,
           scheduler: "K_EULER",
         },
       },
