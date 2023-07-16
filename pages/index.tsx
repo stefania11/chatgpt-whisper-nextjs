@@ -112,6 +112,9 @@ export default function Home() {
       });
 
       const gptResponse = await response.json();
+      setImageInputValue(gptResponse);
+      handleSubmit('calling stable diffusion model');
+
       setLoading(false);
       if (gptResponse.content) {
         setMessagesArray((prevState) => [...prevState, gptResponse]);
@@ -200,8 +203,8 @@ export default function Home() {
 
   //diffusion model
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (input: string) => {
+    console.log(input);
     setLoading(true);
 
     const response = await fetch('/api/stablediffusion', {
@@ -337,9 +340,9 @@ export default function Home() {
             )}
           </Box>
         )}
-        {messagesArray.length === 2 && (
+        {messagesArray.length === 3 && (
           <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-            <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+            {/* <div className="relative py-3 sm:max-w-xl sm:mx-auto">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-green-500 to-cyan-400 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
               <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <form
@@ -362,7 +365,7 @@ export default function Home() {
                   </button>
                 </form>
               </div>
-            </div>
+            </div> */}
             {loading && (
               <div className="mt-12 flex justify-center">
                 <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
