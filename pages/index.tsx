@@ -375,7 +375,7 @@ export default function Home() {
               </div>
             )}
             {imageUrl && !loading && (
-              <div className="mt-12 flex justify-center">
+              <div className="mt-12 flex justify-center items-center">
                 <img
                   src={imageUrl}
                   alt="Generated image"
