@@ -52,9 +52,8 @@ const quirky =
   'You are quirky with a sense of humor. You crack jokes frequently in your responses.';
 const weird =
   'You are weird, you like to surprise the kid with your responses and have the personality of a mercurial 7 years old.';
-const straightLaced =
-  'You are a straight laced corporate executive and only provide concise and accurate information.';
-
+const friend =
+  'You are my best friend, you are always there for me and you are always kind.';
 // brevities
 const briefBrevity = 'Your responses are always 1 to 2 sentences.';
 const longBrevity = 'Your responses are always 3 to 4 sentences.';
@@ -221,32 +220,6 @@ export default function Home() {
     }
     setLoading(false);
   };
-
-  // const diffusionRequest = async () => {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     console.log('messagesArray in diffusionRequest fn', messagesArray);
-  //     const response = await fetch('/api/stablediffusion', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         value: messagesArray
-  //       }),
-  //     });
-  //       const diffusionResponse = await response.json();
-  //       if (diffusionResponse.ok) {
-  //         setImageUrl(diffusionResponse[0]);
-  //         // setMessagesArray((prevState) => [...prevState, diffusionResponse]);
-  //       } else {
-  //         setError('No response returned from server.');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error:', error);
-  //     }
-  //   };
 
   // // video generation
   //   const generateVideo = async (req: NextApiRequest, res: NextApiResponse, text: string) => {
