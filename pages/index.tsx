@@ -112,8 +112,8 @@ export default function Home() {
       });
 
       const gptResponse = await response.json();
-      setImageInputValue(gptResponse);
-      handleSubmit('calling stable diffusion model');
+      // setImageInputValue(gptResponse);
+      // handleSubmit('calling stable diffusion model');
 
       setLoading(false);
       if (gptResponse.content) {
@@ -175,9 +175,12 @@ export default function Home() {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+    setImageInputValue(event.target.value);
   };
 
   const handleInputSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    setImageInputValue(inputValue);
+    handleSubmit('calling stable diffusion model');
     event.preventDefault();
     if (inputValue.trim() !== '') {
       updateMessagesArray(inputValue);
