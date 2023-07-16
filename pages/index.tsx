@@ -9,6 +9,7 @@ import {
   Grid,
   Loader,
   Text,
+  Input,
 } from '@mantine/core';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import {
@@ -18,7 +19,14 @@ import {
   IconRefresh,
   IconRobot,
   IconUser,
+  IconCat,
 } from '@tabler/icons';
+import { Fish, Unicorn } from '../public/images/imagePaths';
+
+import { NextApiRequest, NextApiResponse } from 'next';
+import torch from 'torch';
+import imageio from 'imageio';
+import { TextToVideoZeroPipeline } from 'diffusers';
 
 interface MessageSchema {
   role: 'assistant' | 'user' | 'system';
@@ -59,7 +67,13 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
+
+  const initialMessage =
+    "Hey there! Let's start our amazing story together. Why don't you say something into the microphone or click on one of the ideas below to kick things off?";
+  const [messagesArray, setMessagesArray] = useState([
+    defaultContextSchema,
+    { role: 'system', content: initialMessage },
+  ]);
 
   useEffect(() => {
     if (
@@ -108,6 +122,10 @@ export default function Home() {
     setMessagesArray((prevState) => [...prevState, newMessageSchema]);
   };
 
+  const handleBoxClick = (message: string) => {
+    updateMessagesArray(message);
+  };
+
   // whisper request
   const whisperRequest = async (audioFile: Blob) => {
     setError(null);
@@ -139,6 +157,37 @@ export default function Home() {
     }
   };
 
+  // keyboard backup
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleInputSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (inputValue.trim() !== '') {
+      updateMessagesArray(inputValue);
+      setInputValue('');
+    }
+  };
+
+  // // video generation
+  //   const generateVideo = async (req: NextApiRequest, res: NextApiResponse, text: string) => {
+  //     setError(null);
+  //     try {
+  //       const model_id = "runwayml/stable-diffusion-v1-5";
+  //       const pipe = TextToVideoZeroPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda");
+
+  //       const prompt = "A panda is playing guitar on times square";
+  //       const result = pipe(prompt=prompt).images;
+  //       const video = result.map(r => (r * 255).astype("uint8"));
+
+  //       res.setHeader('Content-Type', 'video/mp4');
+  //       res.send(video);
+  //     };
+  //   };
+
   return (
     <>
       <Head>
@@ -149,7 +198,7 @@ export default function Home() {
 
       <Container size="sm" mt={25}>
         <Center>
-          <IconRobot size={30} color="teal" />
+          <IconCat size={30} color="teal" />
           <Text
             size={30}
             weight={300}
@@ -190,7 +239,7 @@ export default function Home() {
                 {message.role === 'system' && (
                   <Grid>
                     <Grid.Col span={1}>
-                      <IconRobot size={25} />
+                      <IconCat size={25} />
                     </Grid.Col>
                     <Grid.Col span={11}>
                       <Text>{message.content}</Text>
@@ -199,36 +248,92 @@ export default function Home() {
                 )}
               </>
             ))}
+            {messagesArray.length === 2 && (
+              <Grid mt={20}>
+                <Grid.Col span={6}>
+                  <Box
+                    p={20}
+                    style={{
+                      border: '3px solid',
+                      borderColor: 'lightgrey',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleBoxClick('Fish reading a book')}
+                  >
+                    <Center>
+                      <img src={Fish} alt="Sample fish 1" width="150" />
+                    </Center>
+                    <Text mt={10}>Fish Reading a Book</Text>
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Box
+                    p={20}
+                    style={{
+                      border: '3px solid',
+                      borderColor: 'lightgrey',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleBoxClick('Unicorn drinking coffee')}
+                  >
+                    <Center>
+                      <img src={Unicorn} alt="Sample Image 2" width="150" />
+                    </Center>
+                    <Text mt={10}>Unicorn Drinking Coffee</Text>
+                  </Box>
+                </Grid.Col>
+              </Grid>
+            )}
           </Box>
         )}
       </Container>
       <Container size="sm">
         <Center style={{ height: 200 }}>
-          {!loading && (
-            <AudioRecorder
-              onRecordingComplete={(audioBlob) => whisperRequest(audioBlob)}
+          <form onSubmit={handleInputSubmit} style={{ display: 'flex' }}>
+            <Input
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Type your message..."
             />
-          )}
-          {loading && <Loader />}
-          {!loading && messagesArray.length > 1 && (
             <Button
               variant="gradient"
               radius={100}
-              w={40}
-              m={20}
-              p={0}
-              style={{ position: 'absolute', marginLeft: '140px' }}
-              disabled={loading}
-              loading={loading}
+              m={3}
               gradient={{ from: 'indigo', to: 'cyan' }}
-              onClick={() => {
-                setMessagesArray([defaultContextSchema]);
-              }}
-              title="Start Over"
+              type="submit"
             >
-              <IconRefresh size={25} />
+              Send
             </Button>
-          )}
+          </form>
+          <div style={{ alignItems: 'center' }}>
+            {!loading && (
+              <AudioRecorder
+                onRecordingComplete={(audioBlob) => whisperRequest(audioBlob)}
+              />
+            )}
+            {loading && <Loader />}
+            {!loading && messagesArray.length > 1 && (
+              <Button
+                variant="gradient"
+                radius={100}
+                w={40}
+                m={20}
+                p={0}
+                style={{ position: 'absolute', marginLeft: '140px' }}
+                disabled={loading}
+                loading={loading}
+                gradient={{ from: 'indigo', to: 'cyan' }}
+                onClick={() => {
+                  setMessagesArray([defaultContextSchema]);
+                }}
+                title="Start Over"
+              >
+                <IconRefresh size={25} />
+              </Button>
+            )}
+          </div>
         </Center>
       </Container>
     </>
