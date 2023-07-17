@@ -64,11 +64,17 @@ export default function Home() {
     content: botContext,
   };
 
-  const [apiKey, setApiKey] = useState('');
 
-  const handleOAI = (event) => {
+  const [apiKey, setApiKey] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  console.log('api key1:' + apiKey);
+
+  const handleOAI = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     process.env.OPENAI_API_KEY = apiKey;
+    console.log('api key2:'+apiKey);
+    setSubmitted(true);
+    console.log('api key3:'+process.env.OPENAI_API_KEY);
   };
 
   const [loading, setLoading] = useState(false);
@@ -210,17 +216,6 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <form onSubmit={handleOAI}>
-      <label htmlFor="apiKey">OpenAI API Key:</label>
-      <input
-        type="text"
-        id="apiKey"
-        name="apiKey"
-        value={apiKey}
-        onChange={(event) => setApiKey(event.target.value)}
-      />
-      <input type="submit" value="Submit" />
-    </form>
       <Container size="sm" mt={25}>
         <Center>
           <IconCat size={30} color="teal" />
@@ -345,6 +340,21 @@ export default function Home() {
             `}</style>
           </div>
       </Container>
+      <Center>
+      {!submitted &&
+        <form onSubmit={handleOAI}>
+          <label htmlFor="apiKey">OpenAI API Key:</label>
+          <input
+            type="text"
+            id="apiKey"
+            name="apiKey"
+            value={apiKey}
+            onChange={(event) => setApiKey(event.target.value)}
+          />
+          <input type="submit" value="Submit" />
+        </form>
+      }
+    </Center>
       <Container size="sm">
         <Center style={{ height: 200 }}>
           <form onSubmit={handleInputSubmit} style={{ display: 'flex' }}>
