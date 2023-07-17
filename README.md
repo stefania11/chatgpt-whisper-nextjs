@@ -1,39 +1,39 @@
-# ChatGPT + Whisper API NextJS Demo
+# StoryBuddy Demo
 
-This project was created to play around with the Whisper and ChatGPT APIs from OpenAI.
+This project was created for ScaleAI Hackathon to create a story generator for middle school kids. 
 
-![ChatGPT + Whisper API Demo Image](public/Demo.png?raw=true 'ChatGPT + Whisper API Demo')
+![Story Buddy Demo Image](public/Demo.png?raw=true 'StoryBuddy Demo')
 
 ## Here's what it does:
 
-- Uses the microphone on your web device to interact with ChatGPT similar to Siri.
-- Sets a default context for ChatGPT where you can configure its role, personality, and brevity of its responses.
+- Uses the microphone on your web device to interact with ChatGPT like Siri.
+- You can either type or talk into the mic
+- When you are happy with the story plot, it will generate the story for you together with images and video (WIP) 
+- Sets a default context for ChatGPT where you can configure the role, personality, and brevity of its responses.
 - Just like ChatGPT, it remembers your conversation
-- Button to reset the conversation.
+- Button to reset the story plot.
 
-## What's so cool about this?
+## How is this adapted for youth?
 
-- Talking is easier than typing and the Whisper API does a great job at translating speech to text.
-- Refining the context of ChatGPT allows its responses to be extremely relevant to you.
-- With the context pre-defined, you can save a lot of time interacting with ChatGPT.
+- Talking is easier than typing for kids, and the Whisper API does a great job of translating speech to text.
+- Refining the context of ChatGPT allows its responses to be extremely relevant for a young audience.
+- The generated story is multimodal (with text, images, and video)
+- Safety and age filters are used for all models
 
-## Configuring ChatGPT Context
+## Configuring StoryBuddy Context
 
 Open up `pages/index.tsx` and note the following areas that can be configured:
 
 ```javascript
 // roles
-const botRolePairProgrammer =
-  'You are an expert pair programmer helping build an AI bot application with the OpenAI ChatGPT and Whisper APIs. The software is a web application built with NextJS with serverless functions, React functional components using TypeScript.';
+const storyTeller =
+  'You are gathering information for a story for kids in middle school. The kids will give you details, and you need to ask them only one question every time to continue the story. Please keep your response in a format where the summary and question are separated.';
+
 const nocontext = '';
 
 // personalities
 const quirky =
   'You are quirky with a sense of humor. You crack jokes frequently in your responses.';
-const drugDealer =
-  'You are a snarky black market drug dealer from the streets of Los Angeles. Sometimes you are rude and disrespectful. You often curse in your responses.';
-const straightLaced =
-  'You are a straight laced corporate executive and only provide concise and accurate information.';
 
 // brevities
 const briefBrevity = 'Your responses are always 1 to 2 sentences.';
@@ -41,7 +41,7 @@ const longBrevity = 'Your responses are always 3 to 4 sentences.';
 const whimsicalBrevity = 'Your responses are always 5 to 6 sentences.';
 
 // dials
-const role = botRolePairProgrammer;
+const role = storyTeller;
 const personality = quirky;
 const brevity = briefBrevity;
 
@@ -49,7 +49,7 @@ const brevity = briefBrevity;
 const botContext = `${role} ${personality} ${brevity}`;
 ```
 
-Add your own roles to cater it to your needs.
+You can add your own roles to cater it to your needs.
 
 ## ENV setup
 
@@ -59,11 +59,11 @@ To use the OpenAI API you must generate an OpenAI API key, create a file called 
 
 This project is setup to deploy on the free version of vercel, just clone and add it to your project and deploy it to production.
 
-Special note: In order for this to deploy and work properly on Vercel, you must use Node 16.x for your serverless functions.
+Special note: For this to deploy and work properly on Vercel, you must **use Node 16.x **for your serverless functions.
 
 ## Boilerplate stuff:
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) building on this [template](https://github.com/coryshaw/chatgpt-whisper-nextjs) 
 
 ## Getting Started
 
@@ -79,11 +79,11 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You can edit the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts.`
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The `pages/api` directory is mapped to `/api/*.` Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
