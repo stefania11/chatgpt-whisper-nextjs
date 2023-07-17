@@ -23,17 +23,6 @@ import {
 } from '@tabler/icons';
 import { Fish, Unicorn } from '../public/images/imagePaths';
 
-// import { NextApiRequest, NextApiResponse } from 'next';
-// import torch from 'torch';
-// import imageio from 'imageio';
-// import { TextToVideoZeroPipeline } from 'diffusers';
-
-// for video generation WIP
-// import { NextApiRequest, NextApiResponse } from 'next';
-// import torch from 'torch';
-// import imageio from 'imageio';
-// import { TextToVideoZeroPipeline } from 'diffusers';
-
 interface MessageSchema {
   role: 'assistant' | 'user' | 'system';
   content: string;
@@ -75,6 +64,13 @@ export default function Home() {
     content: botContext,
   };
 
+  const [apiKey, setApiKey] = useState('');
+
+  const handleOAI = (event) => {
+    event.preventDefault();
+    process.env.OPENAI_API_KEY = apiKey;
+  };
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -112,8 +108,6 @@ export default function Home() {
       });
 
       const gptResponse = await response.json();
-      // setImageInputValue(gptResponse);
-      // handleSubmit('calling stable diffusion model');
 
       setLoading(false);
       if (gptResponse.content) {
@@ -188,24 +182,7 @@ export default function Home() {
     }
   };
 
-  // // video generation
-  //   const generateVideo = async (req: NextApiRequest, res: NextApiResponse, text: string) => {
-  //     setError(null);
-  //     try {
-  //       const model_id = "runwayml/stable-diffusion-v1-5";
-  //       const pipe = TextToVideoZeroPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda");
-
-  //       const prompt = "A panda is playing guitar on times square";
-  //       const result = pipe(prompt=prompt).images;
-  //       const video = result.map(r => (r * 255).astype("uint8"));
-
-  //       res.setHeader('Content-Type', 'video/mp4');
-  //       res.send(video);
-  //     };
-  //   };
-
   //diffusion model
-
   const handleSubmit = async (input: string) => {
     console.log(input);
     setLoading(true);
@@ -226,23 +203,6 @@ export default function Home() {
     }
     setLoading(false);
   };
-
-  // // video generation
-  //   const generateVideo = async (req: NextApiRequest, res: NextApiResponse, text: string) => {
-  //     setError(null);
-  //     try {
-  //       const model_id = "runwayml/stable-diffusion-v1-5";
-  //       const pipe = TextToVideoZeroPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda");
-
-  //       const prompt = "A panda is playing guitar on times square";
-  //       const result = pipe(prompt=prompt).images;
-  //       const video = result.map(r => (r * 255).astype("uint8"));
-
-  //       res.setHeader('Content-Type', 'video/mp4');
-  //       res.send(video);
-  //     };
-  //   };
-
   return (
     <>
       <Head>
@@ -250,7 +210,17 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <form onSubmit={handleOAI}>
+      <label htmlFor="apiKey">OpenAI API Key:</label>
+      <input
+        type="text"
+        id="apiKey"
+        name="apiKey"
+        value={apiKey}
+        onChange={(event) => setApiKey(event.target.value)}
+      />
+      <input type="submit" value="Submit" />
+    </form>
       <Container size="sm" mt={25}>
         <Center>
           <IconCat size={30} color="teal" />
@@ -343,32 +313,7 @@ export default function Home() {
             )}
           </Box>
         )}
-        {/* {messagesArray.length === 3 && ( */}
           <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-            {/* <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-green-500 to-cyan-400 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-              <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-                <form
-                  onSubmit={handleSubmit}
-                  className="max-w-md mx-auto space-y-4"
-                >
-                  <input
-                    type="text"
-                    value={imageInputValue}
-                    onChange={(e) => setImageInputValue(e.target.value)}
-                    className="w-full px-5 py-3 text-gray-700 bg-gray-200 rounded"
-                    placeholder="Enter a prompt..."
-                  />
-                  <button
-                    type="submit"
-                    className="w-full px-3 py-4 text-white bg-gradient-to-r from-cyan-400 via-green-500 to-cyan-400 rounded-md focus:outline-none"
-                    disabled={loading}
-                  >
-                    Submit
-                  </button>
-                </form>
-              </div>
-            </div> */}
             {loading && (
               <div className="mt-12 flex justify-center">
                 <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
@@ -399,8 +344,6 @@ export default function Home() {
               }
             `}</style>
           </div>
-          {/* )} */}
-
       </Container>
       <Container size="sm">
         <Center style={{ height: 200 }}>
