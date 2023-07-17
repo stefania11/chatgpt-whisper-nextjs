@@ -2,7 +2,7 @@
 
 This project was created for ScaleAI Hackathon to create a story generator for middle school kids. 
 
-![Story Buddy Demo Image](public/Demo.png?raw=true 'StoryBuddy Demo')
+![Story Buddy Demo Image](public/StoryBuddy_Demo.png?raw=true 'StoryBuddy Demo')
 
 ## Here's what it does:
 
