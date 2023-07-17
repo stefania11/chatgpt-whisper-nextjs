@@ -1,5 +1,5 @@
 {
-  "name": "chatgpt-whisper-nextjs",
+  "name": "storybuddy",
   "version": "1.0",
   "private": false,
   "scripts": {
@@ -23,6 +23,7 @@
     "@mantine/hooks": "^6.0.0",
     "@mantine/next": "^6.0.0",
     "@tabler/icons": "^1.115",
+    "eslint-config-next": "^13.4.10",
     "form-data": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "next": "^13.2.3",
@@ -30,6 +31,7 @@
     "react": "^18.2.0",
     "react-audio-voice-recorder": "^1.0.4",
     "react-dom": "^18.2.0",
-    "replicate": "^0.12.3"
+    "replicate": "^0.12.3",
+    "vite-plugin-css-injected-by-js": "^3.2.1"
   }
 }
